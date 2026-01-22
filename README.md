@@ -1,4 +1,3 @@
-````markdown
 # rnacentral-parser
 
 Lightweight utilities to parse RNAcentral FASTA releases and construct sequence-level and TaxID-aware mappings without relying on the official PostgreSQL dump.
@@ -20,7 +19,6 @@ The code assumes you are working from the **raw `current_release` directory**, w
 ## Environment setup
 
 Create and activate a clean python environment.
-````
 
 Install required Python dependencies:
 
