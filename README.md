@@ -16,6 +16,9 @@ https://rnacentral.org/help/ftp
 
 The code assumes you are working from the **raw `current_release` directory**, without any intermediate database layer.
 
+performed in command line (To download the current release):
+rsync -avz rsync.ebi.ac.uk::pub/databases/RNAcentral/current_release/ current_release/
+
 ## Environment setup
 
 Create and activate a clean python environment.
