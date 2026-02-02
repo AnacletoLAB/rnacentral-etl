@@ -254,21 +254,23 @@ class QueryRnaCentral:
                 SELECT DISTINCT
                     RNAcentral_ID,
                     rna_type,
-                    taxid
+                    taxid,
+                    misc
                 FROM id_map
                 WHERE external_id = ?
-                  AND external_db LIKE 'ENSEMBL%'
+                  AND external_db LIKE 'ENS%'
             """, [ensembl_id]).df()
     
         return self.con.execute("""
             SELECT DISTINCT
                 RNAcentral_ID,
                 rna_type,
-                taxid
+                taxid,
+                misc
             FROM id_map
             WHERE external_id = ?
               AND taxid = ?
-              AND external_db LIKE 'ENSEMBL%'
+              AND external_db LIKE 'ENS%'
         """, [ensembl_id, taxid]).df()
 
 
