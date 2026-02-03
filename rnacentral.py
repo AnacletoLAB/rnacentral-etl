@@ -272,5 +272,23 @@ class QueryRnaCentral:
               AND taxid = ?
               AND external_db LIKE 'ENS%'
         """, [ensembl_id, taxid]).df()
+        
+
+    def ensembl_gene_to_rnacentral_transcripts(self, ensembl_gene_id, taxid):
+        """
+        Given an Ensembl gene ID (with or without version suffix) and a taxid,
+        return all RNAcentral transcript IDs for that gene.
+        """
+        return self.con.execute("""
+            SELECT DISTINCT
+                RNAcentral_ID
+            FROM id_map
+            WHERE regexp_replace(misc, '\\..*$', '') =
+                  regexp_replace(?,    '\\..*$', '')
+              AND taxid = ?
+              AND external_db LIKE 'ENS%'
+        """, [ensembl_gene_id, taxid]).df()
+
+
 
 

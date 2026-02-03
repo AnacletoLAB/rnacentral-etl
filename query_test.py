@@ -35,6 +35,13 @@ print(f"\nEnsembl to RNAcentral (Ensembl ID={ensembl_id, taxid}):")
 df_ens = rc.ensembl_to_rnacentral(ensembl_id, taxid)
 print(df_ens)
 
+# ---
+taxid= "10090"
+gene_ens_id = "ENSMUSG00000065862"
+print(f"\nEnsembl gene ID to RNAcentral (Ensembl ID={gene_ens_id, taxid}):")
+df_ens = rc.ensembl_gene_to_rnacentral_transcripts(gene_ens_id, taxid)
+print(df_ens)
+
 # ------------------- Query sequence by RNAcentral ID -------------------
 # URS is unique for a unique sequence!
 
