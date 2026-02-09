@@ -281,13 +281,47 @@ class QueryRnaCentral:
         """
         return self.con.execute("""
             SELECT DISTINCT
-                RNAcentral_ID
+                RNAcentral_ID,
+                rna_type,
+                taxid,
+                external_db
             FROM id_map
             WHERE regexp_replace(misc, '\\..*$', '') =
                   regexp_replace(?,    '\\..*$', '')
               AND taxid = ?
               AND external_db LIKE 'ENS%'
         """, [ensembl_gene_id, taxid]).df()
+
+
+    def mirbase_to_rnacentral(self, mirbase_id, taxid=None):
+        """
+        Given a miRBase ID (MI... or MIMAT...) and optional taxid,
+        return RNAcentral IDs and RNA type.
+        """
+        if taxid is None:
+            return self.con.execute("""
+                SELECT DISTINCT
+                    RNAcentral_ID,
+                    rna_type,
+                    taxid
+                FROM id_map
+                WHERE external_db = 'MIRBASE'
+                  AND external_id = ?
+            """, [mirbase_id]).df()
+    
+        return self.con.execute("""
+            SELECT DISTINCT
+                RNAcentral_ID,
+                rna_type,
+                taxid
+            FROM id_map
+            WHERE external_db = 'MIRBASE'
+              AND external_id = ?
+              AND taxid = ?
+        """, [mirbase_id, taxid]).df()
+
+
+    #def refseq_transcript_to_rnacentral()
 
 
 
