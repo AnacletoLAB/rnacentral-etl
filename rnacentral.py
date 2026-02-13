@@ -17,7 +17,7 @@ class QueryRnaCentral:
             SELECT
                 column0        AS RNAcentral_ID,
                 column1        AS external_db,
-                column2        AS external_id,
+                column2        AS external_id, 
                 column3        AS taxid,
                 column4        AS rna_type,
                 column5        AS misc
@@ -169,26 +169,6 @@ class QueryRnaCentral:
               ON r.RNAcentral_ID = g.RNAcentral_ID 
             WHERE r.RNAcentral_ID = ? """, [urs_id]).df()
     
-    '''
-    function for taxID related GO terms only:
-    def rnacentral_metadata(self, urs_id, taxid):
-        """
-        Given RNAcentral ID and taxid, return GO terms (filtered by taxid)
-        and Rfam annotations (no taxid filtering, RFAM is universal).
-        """
-        return self.con.execute("""
-            SELECT DISTINCT
-                g.go_id,
-                g.rfam_id AS go_rfam_id,
-                g.taxid,
-                r.rfam_id,
-                r.rfam_description
-            FROM rfam_map r
-            LEFT JOIN go_map g
-              ON r.RNAcentral_ID = g.RNAcentral_ID AND g.taxid = ?
-            WHERE r.RNAcentral_ID = ?
-        """, [taxid, urs_id]).df()'''
-    
     
     def rnacentral_to_external_ids(self, urs_id, taxid):
         """
@@ -320,9 +300,27 @@ class QueryRnaCentral:
               AND taxid = ?
         """, [mirbase_id, taxid]).df()
 
-
-    #def refseq_transcript_to_rnacentral()
-
-
-
+    def external_to_rnacentral(self, external_id, taxid):
+        """
+        Given an external ID and taxid, return matching RNAcentral IDs and RNA types.
+    
+        Matching is performed against:
+        - external_id
+        - misc field (version-insensitive)
+        """
+        return self.con.execute("""
+            SELECT DISTINCT
+                RNAcentral_ID,
+                rna_type,
+                external_db, 
+                external_id
+            FROM id_map
+            WHERE taxid = ?
+              AND (
+                    regexp_replace(external_id, '\\..*$', '') =
+                    regexp_replace(?,            '\\..*$', '')
+                 OR regexp_replace(misc,        '\\..*$', '') =
+                    regexp_replace(?,            '\\..*$', '')
+              )
+        """, [taxid, external_id, external_id]).df()
 
