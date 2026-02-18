@@ -209,14 +209,16 @@ class QueryRnaCentral:
         if taxid is None:
             return self.con.execute("""
                 SELECT DISTINCT
-                    m.RNAcentral_ID
+                    m.RNAcentral_ID,
+                    i.rna_type
                 FROM md5_map m
                 WHERE m.md5 = ?
             """, [md5]).df()
     
         return self.con.execute("""
             SELECT DISTINCT
-                m.RNAcentral_ID
+                m.RNAcentral_ID,
+                i.rna_type
             FROM md5_map m
             JOIN id_map i
               ON m.RNAcentral_ID = i.RNAcentral_ID
