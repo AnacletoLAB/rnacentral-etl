@@ -243,6 +243,8 @@ class QueryRnaCentral:
                     m.RNAcentral_ID,
                     i.rna_type
                 FROM md5_map m
+                JOIN id_map i
+                  ON m.RNAcentral_ID = i.RNAcentral_ID
                 WHERE m.md5 = ?
             """, [md5]).df()
     
