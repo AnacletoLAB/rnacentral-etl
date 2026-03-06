@@ -169,7 +169,7 @@ class QueryRnaCentral:
               ON r.RNAcentral_ID = g.RNAcentral_ID 
             WHERE r.RNAcentral_ID = ? """, [urs_id]).df()
     
-    
+    '''
     def rnacentral_to_external_ids(self, urs_id, taxid):
         """
         Given RNAcentral ID, return all external database mappings.
@@ -183,7 +183,38 @@ class QueryRnaCentral:
             FROM id_map
             WHERE RNAcentral_ID = ?
               AND taxid = ?
-        """, [urs_id, taxid]).df()
+        """, [urs_id, taxid]).df()'''
+
+    def rnacentral_to_external_ids(self, urs_id, taxid=None):
+        """
+        Given RNAcentral ID, return all external database mappings.
+        If taxid is None, search only by RNAcentral ID.
+        """
+        if taxid is None:
+            query = """
+                SELECT
+                    external_db,
+                    external_id,
+                    taxid,
+                    rna_type
+                FROM id_map
+                WHERE RNAcentral_ID = ?
+            """
+            params = [urs_id]
+        else:
+            query = """
+                SELECT
+                    external_db,
+                    external_id,
+                    taxid,
+                    rna_type
+                FROM id_map
+                WHERE RNAcentral_ID = ?
+                  AND taxid = ?
+            """
+            params = [urs_id, taxid]
+    
+        return self.con.execute(query, params).df()
     
     
     def rnacentral_to_sequence(self, urs_id):
